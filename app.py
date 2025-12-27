@@ -33,9 +33,22 @@ with app.app_context():
     db.create_all()
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def home():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = User.query.filter_by(username=username).first()
+
+        if user and user.check_password(password):
+            session['user_id'] = user.id
+            return f"<h1>Welcome, {user.username}!</h1>"
+        else:
+            return "Invalid username or password!"
+    
     return render_template('login.html')
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -51,6 +64,9 @@ def register():
 
         if User.query.filter_by(email=email).first():
             return "Email already exists!"
+        
+        if User.query.filter_by(username=username).first():
+            return "Username already exists!"
 
         new_user = User(username=username, email=email)
         new_user.set_password(password)
