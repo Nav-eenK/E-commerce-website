@@ -1,7 +1,7 @@
 from flask import Flask, render_template,redirect,url_for,request,session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import os
 
 app = Flask(__name__)
 
@@ -91,7 +91,8 @@ def register():
 def logout():
     session.clear()
     return redirect(url_for('home'))
-if __name__ == '__main__':
 
 
-    app.run(debug=True, port=5001)
+port = int(os.environ.get("PORT", 5001))
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=port)
