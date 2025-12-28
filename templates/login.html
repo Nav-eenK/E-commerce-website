@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends "base.html" %}
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+{% block title %}Login - ShopEase{% endblock %}
 
+{% block content %}
     <style>
         * {
             margin: 0;
@@ -117,13 +112,12 @@
             }
         }
     </style>
-</head>
-<body>
+
 
     <div class="login-container">
         <h2>Welcome Back</h2>
 
-        <form method="POST" action="{{ url_for('home') }}">
+        <form method="POST" action="{{ url_for('login') }}">
             <div class="input-group">
                 <label>Username</label>
                 <input type="text" name="username" placeholder="Enter username" required>
@@ -143,5 +137,4 @@
         </div>
     </div>
 
-</body>
-</html>
+{% endblock %}
