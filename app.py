@@ -1,7 +1,7 @@
 from flask import Flask, render_template,redirect,url_for,request,session
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
+
 
 app = Flask(__name__)
 
@@ -33,9 +33,11 @@ class User(db.Model):
 with app.app_context():
     db.create_all()
 
-
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
+    return render_template('home.html')
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -44,12 +46,14 @@ def home():
 
         if user and user.check_password(password):
             session['user_id'] = user.id
-            return f"<h1>Welcome, {user.username}!</h1>"
+            return redirect(url_for('dashboard'))
         else:
             return "Invalid username or password!"
     
     return render_template('login.html')
-
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -75,10 +79,15 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for('home'))
+        return redirect(url_for('login'))
 
     return render_template('register.html')
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('home'))
+if __name__ == '__main__':
+
+
+    app.run(debug=True, port=5001)
